@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{D64E7598-D7C7-45C1-8387-1B8947BCDFBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{93AA8677-AA79-44AF-89DF-4F7D38380616}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Core", "Src\IdentityService.Core\IdentityService.Core.csproj", "{B9A58A27-5B64-474A-9726-4287E6FCB7DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Infrastructure", "Src\IdentityService.Infrastructure\IdentityService.Infrastructure.csproj", "{972460E0-5BE4-4DE8-9C36-52D1A3769CF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.WebAPI", "Src\IdentityService.WebAPI\IdentityService.WebAPI.csproj", "{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.Infrastructure.Test", "Test\IdentityService.Infrastructure.Test\IdentityService.Infrastructure.Test.csproj", "{43962E1C-CD84-429A-9D6D-D01A8181DAE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService.WebAPI.Test", "Test\IdentityService.WebAPI.Test\IdentityService.WebAPI.Test.csproj", "{5356FB04-4573-42C5-B880-1A42074D85D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B9A58A27-5B64-474A-9726-4287E6FCB7DB} = {D64E7598-D7C7-45C1-8387-1B8947BCDFBD}
+		{972460E0-5BE4-4DE8-9C36-52D1A3769CF6} = {D64E7598-D7C7-45C1-8387-1B8947BCDFBD}
+		{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD} = {D64E7598-D7C7-45C1-8387-1B8947BCDFBD}
+		{43962E1C-CD84-429A-9D6D-D01A8181DAE1} = {93AA8677-AA79-44AF-89DF-4F7D38380616}
+		{5356FB04-4573-42C5-B880-1A42074D85D2} = {93AA8677-AA79-44AF-89DF-4F7D38380616}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9A58A27-5B64-474A-9726-4287E6FCB7DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A58A27-5B64-474A-9726-4287E6FCB7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A58A27-5B64-474A-9726-4287E6FCB7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A58A27-5B64-474A-9726-4287E6FCB7DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{972460E0-5BE4-4DE8-9C36-52D1A3769CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{972460E0-5BE4-4DE8-9C36-52D1A3769CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{972460E0-5BE4-4DE8-9C36-52D1A3769CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{972460E0-5BE4-4DE8-9C36-52D1A3769CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F22AFD-EB10-4CC3-B3D2-D19EC3F95CAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43962E1C-CD84-429A-9D6D-D01A8181DAE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43962E1C-CD84-429A-9D6D-D01A8181DAE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43962E1C-CD84-429A-9D6D-D01A8181DAE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43962E1C-CD84-429A-9D6D-D01A8181DAE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5356FB04-4573-42C5-B880-1A42074D85D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5356FB04-4573-42C5-B880-1A42074D85D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5356FB04-4573-42C5-B880-1A42074D85D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5356FB04-4573-42C5-B880-1A42074D85D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
