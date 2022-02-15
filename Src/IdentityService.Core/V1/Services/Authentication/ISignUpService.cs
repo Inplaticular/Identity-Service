@@ -4,5 +4,5 @@ using Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authentication;
 namespace Inplanticular.IdentityService.Core.V1.Services.Authentication; 
 
 public interface ISignUpService {
-	Task<SignUpResponse> SignUpAsync(SignUpRequest request);
+	Task<SignUpResponse> SignUpUserAsync(SignUpRequest request);
 }

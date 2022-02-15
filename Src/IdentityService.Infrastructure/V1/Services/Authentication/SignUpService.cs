@@ -14,7 +14,7 @@ public class SignUpService : ISignUpService {
 		this._userManager = userManager;
 	}
 	
-	public async Task<SignUpResponse> SignUpAsync(SignUpRequest request) {
+	public async Task<SignUpResponse> SignUpUserAsync(SignUpRequest request) {
 		var user = new IdentityUser() {
 			UserName = request.Username,
 			Email = request.Email
