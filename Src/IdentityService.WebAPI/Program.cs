@@ -1,10 +1,17 @@
-﻿using Inplanticular.IdentityService.Core.V1.Services.Authentication;
+﻿using System.Text;
+
+using Inplanticular.IdentityService.Core.V1.Options;
+using Inplanticular.IdentityService.Core.V1.Services;
+using Inplanticular.IdentityService.Core.V1.Services.Authentication;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
+using Inplanticular.IdentityService.Infrastructure.V1.Services;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authentication;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Inplanticular.IdentityService.WebAPI; 
 
@@ -27,29 +34,36 @@ public static class Program {
 
 	private static void ConfigureServices(WebApplicationBuilder builder) {
 		builder.Configuration.AddEnvironmentVariables();
-		
+
+		Program.ConfigureOptions(builder, out var jwtIssuingOptions);
 		Program.ConfigureControllers(builder);
-		Program.ConfigureOptions(builder);
 		Program.ConfigureScopedServices(builder);
 		Program.ConfigureEntityFramework(builder);
 		Program.ConfigureIdentity(builder);
+		Program.ConfigureJwtAuthentication(builder, jwtIssuingOptions);
 		
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
+	}
+	
+	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions) {
+		// Disable default ApiControllerAttribute model state validation to allow controllers to pass model state errors to custom responses.
+		builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+		
+		jwtIssuingOptions = new JwtIssuingOptions();
+		builder.Configuration.Bind(JwtIssuingOptions.AppSettingsKey, jwtIssuingOptions);
+		builder.Services.Configure<JwtIssuingOptions>(builder.Configuration.GetSection(JwtIssuingOptions.AppSettingsKey));
 	}
 
 	private static void ConfigureControllers(WebApplicationBuilder builder) {
 		builder.Services.AddControllers();
 	}
 	
-	private static void ConfigureOptions(WebApplicationBuilder builder) {
-		// Disable default ApiControllerAttribute model state validation to allow controllers to pass model state errors to custom responses.
-		builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
-	}
-	
 	private static void ConfigureScopedServices(WebApplicationBuilder builder) {
+		builder.Services.AddScoped<IJwtIssuingService, JwtIssuingService>();
 		builder.Services.AddScoped<ISignUpService, SignUpService>();
+		builder.Services.AddScoped<ILoginService<IdentityUser>, LoginService>();
 	}
 	
 	private static void ConfigureEntityFramework(WebApplicationBuilder builder) {
@@ -72,6 +86,27 @@ public static class Program {
 			options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._+"; // removed @ so username cannot be an email
 		}).AddEntityFrameworkStores<ApplicationDbContext>();
 	}
+	
+	private static void ConfigureJwtAuthentication(WebApplicationBuilder builder, JwtIssuingOptions jwtIssuingOptions) {
+		builder.Services.AddAuthentication(
+			options => {
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}
+		).AddJwtBearer(
+			options => {
+				options.SaveToken = true;
+				options.TokenValidationParameters = new TokenValidationParameters {
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtIssuingOptions.Secret)),
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					ValidateLifetime = true
+				};
+			}
+		);
+	}
 
 	private static void ConfigurePipeline(WebApplication app) {
 		// Configure the HTTP request pipeline.
@@ -82,6 +117,7 @@ public static class Program {
 
 		app.UseHttpsRedirection();
 
+		app.UseAuthentication();
 		app.UseAuthorization();
 
 		app.MapControllers();

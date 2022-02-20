@@ -3,6 +3,7 @@ using Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authentication;
 using Inplanticular.IdentityService.Core.V1.Services.Authentication;
 using Inplanticular.IdentityService.WebAPI.V1.Extensions;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inplanticular.IdentityService.WebAPI.V1.Controller; 
@@ -12,10 +13,12 @@ namespace Inplanticular.IdentityService.WebAPI.V1.Controller;
 public class AuthenticationController : ControllerBase {
 	private readonly ILogger<AuthenticationController> _logger;
 	private readonly ISignUpService _signUpService;
+	private readonly ILoginService<IdentityUser> _loginService;
 	
-	public AuthenticationController(ILogger<AuthenticationController> logger, ISignUpService signUpService) {
+	public AuthenticationController(ILogger<AuthenticationController> logger, ISignUpService signUpService, ILoginService<IdentityUser> loginService) {
 		this._logger = logger;
 		this._signUpService = signUpService;
+		this._loginService = loginService;
 	}
 
 	[HttpPost]
@@ -30,6 +33,21 @@ public class AuthenticationController : ControllerBase {
 		catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.SignUpUserAsync)} threw an exception");
 			return this.InternalServerError<SignUpResponse>(e);
+		}
+	}
+	
+	[HttpPost]
+	[Route("login")]
+	public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request) {
+		if (!this.HasValidModelState(out LoginResponse? response))
+			return this.BadRequest(response);
+		
+		try {
+			return this.Ok(await this._loginService.LoginUserAsync(request));
+		}
+		catch (Exception e) {
+			this._logger.LogError(e, $"{nameof(this.LoginUserAsync)} threw an exception");
+			return this.InternalServerError<LoginResponse>(e);
 		}
 	}
 }
