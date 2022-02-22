@@ -7,5 +7,6 @@ namespace Inplanticular.IdentityService.Core.V1.Services;
 public interface IJwtIssuingService {
 	string CreateToken(JwtIssuingOptions options, IEnumerable<Claim> claims);
 	IEnumerable<Claim>? GetClaimsFromToken(string token);
+	void ValidateToken(string token);
 	bool IsValidToken(string token);
 }

@@ -39,10 +39,13 @@ public class JwtIssuingService : IJwtIssuingService {
 		return securityToken is not JwtSecurityToken jwtSecurityToken ? null : jwtSecurityToken.Claims;
 	}
 
+	public void ValidateToken(string token) {
+		new JwtSecurityTokenHandler().ValidateToken(token, this._jwtBearerOptions?.TokenValidationParameters, out _);
+	}
+	
 	public bool IsValidToken(string token) {
 		try {
-			var tokenHandler = new JwtSecurityTokenHandler();
-			_ = tokenHandler.ValidateToken(token, this._jwtBearerOptions.TokenValidationParameters, out _);
+			this.ValidateToken(token);
 			return true;
 		} catch (Exception) {
 			return false;

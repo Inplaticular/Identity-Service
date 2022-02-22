@@ -63,7 +63,7 @@ public class LoginService : ILoginService<IdentityUser> {
 	}
 
 	public async Task<IdentityUser?> GetUserForTokenAsync(string token) {
-		if (this._jwtIssuingService.IsValidToken(token))
+		if (!this._jwtIssuingService.IsValidToken(token))
 			return null;
 
 		var claims = this._jwtIssuingService.GetClaimsFromToken(token)?.ToArray();
