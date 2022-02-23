@@ -20,6 +20,7 @@ public class AuthorizationController : ControllerBase {
 	}
 
 	[HttpPost]
+	[Route("user")]
 	public IActionResult AuthorizeUser([FromBody] AuthorizeRequest request) {
 		if (!this.HasValidModelState(out AuthorizeResponse? response))
 			return this.BadRequest(response);
@@ -29,11 +30,12 @@ public class AuthorizationController : ControllerBase {
 		}
 		catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.AuthorizeUser)} threw an exception");
-			return this.InternalServerError<SignUpResponse>(e);
+			return this.InternalServerError<AuthorizeResponse>(e);
 		}
 	}
 	
 	[HttpPost]
+	[Route("globalrole")]
 	public async Task<IActionResult> AuthorizeUserGlobalRoleAsync([FromBody] AuthorizeGlobalRoleRequest request) {
 		if (!this.HasValidModelState(out AuthorizeGlobalRoleResponse? response))
 			return this.BadRequest(response);
@@ -43,7 +45,7 @@ public class AuthorizationController : ControllerBase {
 		}
 		catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.AuthorizeUserGlobalRoleAsync)} threw an exception");
-			return this.InternalServerError<SignUpResponse>(e);
+			return this.InternalServerError<AuthorizeGlobalRoleResponse>(e);
 		}
 	}
 }

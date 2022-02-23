@@ -3,10 +3,11 @@
 using Inplanticular.IdentityService.Core.V1.Options;
 using Inplanticular.IdentityService.Core.V1.Services;
 using Inplanticular.IdentityService.Core.V1.Services.Authentication;
+using Inplanticular.IdentityService.Core.V1.Services.Authorization;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
 using Inplanticular.IdentityService.Infrastructure.V1.Services;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authentication;
-
+using Inplanticular.IdentityService.Infrastructure.V1.Services.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,7 @@ public static class Program {
 		jwtIssuingOptions = new JwtIssuingOptions();
 		builder.Configuration.Bind(JwtIssuingOptions.AppSettingsKey, jwtIssuingOptions);
 		builder.Services.Configure<JwtIssuingOptions>(builder.Configuration.GetSection(JwtIssuingOptions.AppSettingsKey));
+		builder.Services.Configure<EmailHostOptions>(builder.Configuration.GetSection(EmailHostOptions.AppSettingsKey));
 	}
 
 	private static void ConfigureControllers(WebApplicationBuilder builder) {
@@ -62,8 +64,13 @@ public static class Program {
 	
 	private static void ConfigureScopedServices(WebApplicationBuilder builder) {
 		builder.Services.AddScoped<IJwtIssuingService, JwtIssuingService>();
+		builder.Services.AddScoped<IEmailService, EmailService>();
+		
 		builder.Services.AddScoped<ISignUpService, SignUpService>();
 		builder.Services.AddScoped<ILoginService<IdentityUser>, LoginService>();
+		builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
+
+		builder.Services.AddScoped<IGlobalAuthorizationService, GlobalAuthorizationService>();
 	}
 	
 	private static void ConfigureEntityFramework(WebApplicationBuilder builder) {
@@ -80,11 +87,15 @@ public static class Program {
 		);
 	}
 
-	private static void ConfigureIdentity(WebApplicationBuilder builder) {
-		builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
-			options.User.RequireUniqueEmail = true;
-			options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._+"; // removed @ so username cannot be an email
-		}).AddEntityFrameworkStores<ApplicationDbContext>();
+	private static void ConfigureIdentity(WebApplicationBuilder builder)
+	{
+		builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+			{
+				options.User.RequireUniqueEmail = true;
+				options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._+"; // removed @ so username cannot be an email
+			})
+			.AddEntityFrameworkStores<ApplicationDbContext>()
+			.AddDefaultTokenProviders();
 	}
 	
 	private static void ConfigureJwtAuthentication(WebApplicationBuilder builder, JwtIssuingOptions jwtIssuingOptions) {

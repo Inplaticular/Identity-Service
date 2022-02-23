@@ -7,6 +7,7 @@ using Inplanticular.IdentityService.Core.V1.Services.Authorization;
 using Inplanticular.IdentityService.Core.V1.ValueObjects;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,12 +17,14 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 	private readonly UserManager<IdentityUser> _userManager;
 	private readonly ILoginService<IdentityUser> _loginService;
 	private readonly IJwtIssuingService _jwtIssuingService;
+	private readonly ILogger<GlobalAuthorizationService> _logger;
 	private readonly JwtIssuingOptions _jwtIssuingOptions;
 
-	public GlobalAuthorizationService(UserManager<IdentityUser> userManager, ILoginService<IdentityUser> loginService, IJwtIssuingService jwtIssuingService, IOptions<JwtIssuingOptions> jwtIssuingOptions) {
+	public GlobalAuthorizationService(UserManager<IdentityUser> userManager, ILoginService<IdentityUser> loginService, IJwtIssuingService jwtIssuingService, IOptions<JwtIssuingOptions> jwtIssuingOptions, ILogger<GlobalAuthorizationService> logger) {
 		this._userManager = userManager;
 		this._loginService = loginService;
 		this._jwtIssuingService = jwtIssuingService;
+		this._logger = logger;
 		this._jwtIssuingOptions = jwtIssuingOptions.Value;
 	}
 
@@ -37,6 +40,8 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 				Messages = new[] {AuthorizeResponse.Message.Authorized}
 			};
 		} catch (Exception e) {
+			this._logger.LogError(e, $"{nameof(this.AuthorizeUser)} threw an exception");
+			
 			return new AuthorizeResponse() {
 				Succeeded = true,
 				Messages = new[] {AuthorizeResponse.Message.Unauthorized},

@@ -49,7 +49,6 @@ public class LoginService : ILoginService<IdentityUser> {
 			new[] {
 				new Claim(JwtRegisteredClaimNames.Sub, user.Id),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(ClaimTypes.NameIdentifier, user.Id),
 				new Claim(ClaimTypes.Name, user.UserName),
 				new Claim(ClaimTypes.Email, user.Email),
 			}
@@ -69,9 +68,8 @@ public class LoginService : ILoginService<IdentityUser> {
 		var claims = this._jwtIssuingService.GetClaimsFromToken(token)?.ToArray();
 
 		var sub = claims?.FirstOrDefault(claim => claim.Type.Equals(JwtRegisteredClaimNames.Sub));
-		var nid = claims?.FirstOrDefault(claim => claim.Type.Equals(ClaimTypes.NameIdentifier));
 
-		if (sub is null || nid is null || !sub.Equals(nid))
+		if (sub is null)
 			return null;
 
 		return await this._userManager.FindByIdAsync(sub.Value);

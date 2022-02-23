@@ -12,10 +12,10 @@ using Microsoft.IdentityModel.Tokens;
 namespace Inplanticular.IdentityService.Infrastructure.V1.Services; 
 
 public class JwtIssuingService : IJwtIssuingService {
-	private readonly JwtBearerOptions _jwtBearerOptions;
+	private readonly IOptionsMonitor<JwtBearerOptions> _jwtBearerOptions;
 	
-	public JwtIssuingService(IOptions<JwtBearerOptions> jwtBearerOptions) {
-		this._jwtBearerOptions = jwtBearerOptions.Value;
+	public JwtIssuingService(IOptionsMonitor<JwtBearerOptions> jwtBearerOptions) {
+		this._jwtBearerOptions = jwtBearerOptions;
 	}
 
 	public string CreateToken(JwtIssuingOptions options, IEnumerable<Claim> claims) {
@@ -40,7 +40,7 @@ public class JwtIssuingService : IJwtIssuingService {
 	}
 
 	public void ValidateToken(string token) {
-		new JwtSecurityTokenHandler().ValidateToken(token, this._jwtBearerOptions?.TokenValidationParameters, out _);
+		new JwtSecurityTokenHandler().ValidateToken(token, this._jwtBearerOptions.Get(JwtBearerDefaults.AuthenticationScheme)?.TokenValidationParameters, out _);
 	}
 	
 	public bool IsValidToken(string token) {

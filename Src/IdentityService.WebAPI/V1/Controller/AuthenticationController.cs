@@ -14,11 +14,13 @@ public class AuthenticationController : ControllerBase {
 	private readonly ILogger<AuthenticationController> _logger;
 	private readonly ISignUpService _signUpService;
 	private readonly ILoginService<IdentityUser> _loginService;
-	
-	public AuthenticationController(ILogger<AuthenticationController> logger, ISignUpService signUpService, ILoginService<IdentityUser> loginService) {
+	private readonly IPasswordResetService _passwordResetService;
+
+	public AuthenticationController(ILogger<AuthenticationController> logger, ISignUpService signUpService, ILoginService<IdentityUser> loginService, IPasswordResetService passwordResetService) {
 		this._logger = logger;
 		this._signUpService = signUpService;
 		this._loginService = loginService;
+		this._passwordResetService = passwordResetService;
 	}
 
 	[HttpPost]
@@ -48,6 +50,36 @@ public class AuthenticationController : ControllerBase {
 		catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.LoginUserAsync)} threw an exception");
 			return this.InternalServerError<LoginResponse>(e);
+		}
+	}
+	
+	[HttpPost]
+	[Route("requestresetpwd")]
+	public async Task<IActionResult> RequestResetPasswordAsync([FromBody] RequestChangePasswordRequest request) {
+		if (!this.HasValidModelState(out RequestChangePasswordResponse? response))
+			return this.BadRequest(response);
+		
+		try {
+			return this.Ok(await this._passwordResetService.RequestChangePasswordTokenAsync(request));
+		}
+		catch (Exception e) {
+			this._logger.LogError(e, $"{nameof(this.RequestResetPasswordAsync)} threw an exception");
+			return this.InternalServerError<RequestChangePasswordResponse>(e);
+		}
+	}
+	
+	[HttpPost]
+	[Route("resetpwd")]
+	public async Task<IActionResult> ResetPasswordAsync([FromBody] ChangePasswordRequest request) {
+		if (!this.HasValidModelState(out ChangePasswordResponse? response))
+			return this.BadRequest(response);
+		
+		try {
+			return this.Ok(await this._passwordResetService.ChangePasswordAsync(request));
+		}
+		catch (Exception e) {
+			this._logger.LogError(e, $"{nameof(this.LoginUserAsync)} threw an exception");
+			return this.InternalServerError<ChangePasswordResponse>(e);
 		}
 	}
 }

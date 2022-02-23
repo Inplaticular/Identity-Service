@@ -8,4 +8,7 @@ public class ChangePasswordRequest {
 	
 	[Required]
 	public string ResetToken { get; set; }
+	
+	[Required]
+	public string NewPassword { get; set; }
 }
