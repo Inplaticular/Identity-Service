@@ -2,8 +2,10 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authentication; 
 
-public class LoginResponse : BaseResponse {
-	public string Token { get; set; } = "";
+public class LoginResponse : BaseResponse<LoginResponse.Body> {
+	public class Body {
+		public string Token { get; set; } = "";
+	}
 
 	public static class Message {
 		public static readonly Info LoggedIn = new() {

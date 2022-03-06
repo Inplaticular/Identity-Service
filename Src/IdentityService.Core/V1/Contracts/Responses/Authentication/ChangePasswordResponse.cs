@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authentication;
 
-public class ChangePasswordResponse : BaseResponse {
+public class ChangePasswordResponse : BaseResponse<ChangePasswordResponse.Body> {
+	public class Body { }
+	
 	public static class Message {
 		public static readonly Info PasswordReset = new() {
 			Code = nameof(PasswordReset),

@@ -13,7 +13,8 @@ public static class ControllerBaseExtensions {
 	/// </summary>
 	/// <param name="controller">The <see cref="ControllerBase"/> instance assigned to the extension method.</param>
 	/// <param name="response">The created response. Null if the model state is valid.</param>
-	/// <typeparam name="TResponse">The type of the response the method should create. Has to inherit from <see cref="BaseResponse"/></typeparam>
+	/// <typeparam name="TResponse">The type of the response the method should create. Has to inherit from <see cref="BaseResponse{TBody}"/></typeparam>
+	/// <typeparam name="TBody">The type of the response <see cref="BaseResponse{TBody}.Content"/> property</typeparam>
 	/// <returns>True if the model state is valid, otherwise false</returns>
 	public static bool HasValidModelState<TResponse>(this ControllerBase controller, out TResponse? response) where TResponse : BaseResponse {
 		if (controller.ModelState.IsValid) {
@@ -36,7 +37,8 @@ public static class ControllerBaseExtensions {
 	/// </summary>
 	/// <param name="controller">The <see cref="ControllerBase"/> instance assigned to the extension method.</param>
 	/// <param name="exception">The exception the response gets its information from.</param>
-	/// <typeparam name="TResponse">The type of the response the method should create. Has to inherit from <see cref="BaseResponse"/></typeparam>
+	/// <typeparam name="TResponse">The type of the response the method should create. Has to inherit from <see cref="BaseResponse{TBody}"/></typeparam>
+	/// <typeparam name="TBody">The type of the response <see cref="BaseResponse{TBody}.Content"/> property</typeparam>
 	/// <returns>The created status 500 error code.</returns>
 	public static IActionResult InternalServerError<TResponse>(this ControllerBase controller, Exception exception) where TResponse : BaseResponse {
 		var response = Activator.CreateInstance<TResponse>();

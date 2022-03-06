@@ -56,8 +56,10 @@ public class LoginService : ILoginService<IdentityUser> {
 
 		return new LoginResponse() {
 			Succeeded = true,
-			Token = token,
-			Messages = new[] {LoginResponse.Message.LoggedIn}
+			Messages = new[] {LoginResponse.Message.LoggedIn},
+			Content = new LoginResponse.Body() {
+				Token = token,
+			}
 		};
 	}
 

@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization.Units;
 
-public class RemoveOrganizationalUnitResponse : OrganizationalUnitResponse {
+public class RemoveOrganizationalUnitResponse : OrganizationalUnitResponse<RemoveOrganizationalUnitResponse.Body> {
+	public class Body : OrganizationalUnitResponse<Body>.Body { }
+
 	public static class Message {
 		public static readonly Info OrganizationalUnitRemoved = new() {
 			Code = nameof(OrganizationalUnitRemoved),

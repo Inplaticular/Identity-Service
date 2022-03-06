@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization.Units;
 
-public class AddOrganizationalUnitResponse : OrganizationalUnitResponse {
+public class AddOrganizationalUnitResponse : OrganizationalUnitResponse<AddOrganizationalUnitResponse.Body> {
+	public class Body : OrganizationalUnitResponse<Body>.Body { }
+
 	public static class Message {
 		public static readonly Info OrganizationalUnitAdded = new() {
 			Code = nameof(OrganizationalUnitAdded),

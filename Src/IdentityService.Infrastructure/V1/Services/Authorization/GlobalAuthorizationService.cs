@@ -36,8 +36,10 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 			this._jwtIssuingService.ValidateToken(request.Token);
 			return new AuthorizeResponse() {
 				Succeeded = true,
-				Authorized = true,
-				Messages = new[] {AuthorizeResponse.Message.Authorized}
+				Messages = new[] {AuthorizeResponse.Message.Authorized},
+				Content = new AuthorizeResponse.Body() {
+					Authorized = true,
+				}
 			};
 		} catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.AuthorizeUser)} threw an exception");
@@ -57,7 +59,7 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 	public async Task<AuthorizeGlobalRoleResponse> AuthorizeUserGlobalRoleAsync(AuthorizeGlobalRoleRequest request) {
 		var authTokenResponse = this.AuthorizeUser(request);
 
-		if (!authTokenResponse.Authorized) {
+		if (authTokenResponse.Content is null || !authTokenResponse.Content.Authorized) {
 			return new AuthorizeGlobalRoleResponse() {
 				Succeeded = authTokenResponse.Succeeded,
 				
@@ -80,9 +82,11 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 
 		return new AuthorizeGlobalRoleResponse() {
 			Succeeded = true,
-			Authorized = isInRole,
 			Messages = new[] {isInRole ? AuthorizeResponse.Message.Authorized : AuthorizeResponse.Message.Unauthorized},
-			Errors = isInRole ? Enumerable.Empty<Info>() : new[] {AuthorizeGlobalRoleResponse.Error.UserNotInRole}
+			Errors = isInRole ? Enumerable.Empty<Info>() : new[] {AuthorizeGlobalRoleResponse.Error.UserNotInRole},
+			Content = new AuthorizeGlobalRoleResponse.Body() {
+				Authorized = isInRole,
+			}
 		};
 	}
 }

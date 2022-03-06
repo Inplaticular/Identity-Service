@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization.Groups; 
 
-public class AddOrganizationalGroupResponse : OrganizationalGroupResponse {
+public class AddOrganizationalGroupResponse : OrganizationalGroupResponse<AddOrganizationalGroupResponse.Body> {
+	public new class Body : OrganizationalGroupResponse<Body>.Body { }
+
 	public static class Message {
 		public static readonly Info OrganizationalGroupAdded = new() {
 			Code = nameof(OrganizationalGroupAdded),

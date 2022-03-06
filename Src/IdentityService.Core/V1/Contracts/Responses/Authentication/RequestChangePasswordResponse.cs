@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authentication; 
 
-public class RequestChangePasswordResponse : BaseResponse {
+public class RequestChangePasswordResponse : BaseResponse<RequestChangePasswordResponse.Body> {
+	public class Body { }
+	
 	public static class Message {
 		public static readonly Info EmailSendIfRegistered = new() {
 			Code = nameof(EmailSendIfRegistered),

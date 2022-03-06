@@ -2,7 +2,9 @@
 
 namespace Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization;
 
-public class AuthorizeGlobalRoleResponse : AuthorizeResponse {
+public class AuthorizeGlobalRoleResponse : AuthorizeResponse<AuthorizeGlobalRoleResponse.Body> {
+	public new class Body : AuthorizeResponse<Body>.Body { }
+
 	public static class Error {
 		public static readonly Info UserNotFound = new() {
 			Code = nameof(UserNotFound),
