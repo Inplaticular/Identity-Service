@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Inplanticular.IdentityService.WebAPI; 
 
 public static class Program {
-	public static void Main(string[] args) {
+	public static async Task Main(string[] args) {
 		var builder = WebApplication.CreateBuilder(args);
 		Program.ConfigureServices(builder);
 		var app = builder.Build();
@@ -25,12 +25,12 @@ public static class Program {
 		using (var scope = app.Services.CreateScope()) {
 			var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 			
-			if (context.Database.GetPendingMigrations().Any())
-				context.Database.Migrate();
+			if ((await context.Database.GetPendingMigrationsAsync()).Any())
+				await context.Database.MigrateAsync();
 		}
 
 		Program.ConfigurePipeline(app);
-		app.Run();
+		await app.RunAsync();
 	}
 
 	private static void ConfigureServices(WebApplicationBuilder builder) {
