@@ -1,0 +1,13 @@
+﻿using Inplanticular.IdentityService.Core.V1.Contracts.Requests.Authorization.Units;
+using Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization.Units;
+
+namespace Inplanticular.IdentityService.Core.V1.Services.Authorization; 
+
+public interface IOrganizationalUnitManagementService {
+	Task<AddOrganizationalUnitResponse> AddOrganizationalUnitAsync(AddOrganizationalUnitRequest request);
+	Task<RemoveOrganizationalUnitResponse> RemoveOrganizationalUnitAsync(RemoveOrganizationalUnitRequest request);
+	Task<UpdateOrganizationalUnitResponse> UpdateOrganizationalUnitAsync(UpdateOrganizationalUnitRequest request);
+	
+	Task<AddOrganizationalUnitUserClaimResponse> AddOrganizationalUnitUserClaimAsync(AddOrganizationalUnitUserClaimRequest request);
+	Task<RemoveOrganizationalUnitUserClaimResponse> RemoveOrganizationalUnitUserClaimAsync(RemoveOrganizationalUnitUserClaimRequest request);
+}
