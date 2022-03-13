@@ -13,6 +13,16 @@ public class AddOrganizationalUnitUserClaimResponse : OrganizationalUnitUserClai
 	}
 	
 	public static class Error {
+		public static readonly Info UserDoesNotExist = new() {
+			Code = nameof(UserDoesNotExist),
+			Description = "The user the user claim should be applied to does not exist"
+		};
+		
+		public static readonly Info OrganizationalUnitDoesNotExist = new() {
+			Code = nameof(OrganizationalUnitDoesNotExist),
+			Description = "The organizational unit the user claim should be added to does not exist"
+		};
+		
 		public static readonly Info OrganizationalUnitUserClaimAlreadyExists = new() {
 			Code = nameof(OrganizationalUnitUserClaimAlreadyExists),
 			Description = "The organizational unit user claim already exists"

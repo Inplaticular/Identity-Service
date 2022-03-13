@@ -13,6 +13,11 @@ public class AddOrganizationalUnitResponse : OrganizationalUnitResponse<AddOrgan
 	}
 	
 	public static class Error {
+		public static readonly Info OrganizationalGroupDoesNotExist = new() {
+			Code = nameof(OrganizationalGroupDoesNotExist),
+			Description = "The organizational group the unit should be added to does not exist"
+		};
+		
 		public static readonly Info OrganizationalUnitAlreadyExists = new() {
 			Code = nameof(OrganizationalUnitAlreadyExists),
 			Description = "The organizational unit already exists"
