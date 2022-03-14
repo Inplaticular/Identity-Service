@@ -17,5 +17,10 @@ public class UpdateOrganizationalGroupResponse : OrganizationalGroupResponse<Upd
 			Code = nameof(OrganizationalGroupDoesNotExist),
 			Description = "The specified organizational group does not exist"
 		};
+		
+		public static readonly Info OrganizationalGroupNameAlreadyExists = new() {
+			Code = nameof(OrganizationalGroupNameAlreadyExists),
+			Description = "The specified organizational group name already exists"
+		};
 	}
 }

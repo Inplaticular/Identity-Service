@@ -18,9 +18,9 @@ public class AddOrganizationalUnitResponse : OrganizationalUnitResponse<AddOrgan
 			Description = "The organizational group the unit should be added to does not exist"
 		};
 		
-		public static readonly Info OrganizationalUnitAlreadyExists = new() {
-			Code = nameof(OrganizationalUnitAlreadyExists),
-			Description = "The organizational unit already exists"
+		public static readonly Info OrganizationalUnitNameAlreadyExists = new() {
+			Code = nameof(OrganizationalUnitNameAlreadyExists),
+			Description = "The organizational unit name already exists"
 		};
 	}
 }

@@ -13,6 +13,6 @@ public interface IOrganizationalUnitRepository {
 	Task AddUserClaimAsync(OrganizationalUnitUserClaim userClaim);
 	Task RemoveUserClaimAsync(OrganizationalUnitUserClaim userClaim);
 	Task<OrganizationalUnitUserClaim?> FindUserClaimByIdAsync(string id);
-	Task<OrganizationalUnitUserClaim?> FindUserClaimByValuesAsync(string userId, string type, string value);
+	Task<OrganizationalUnitUserClaim?> FindUserClaimByValuesAsync(string unitId, string userId, string type, string value);
 	Task<IEnumerable<OrganizationalUnitUserClaim>> GetUserClaimsForUnitAsync(OrganizationalUnit unit);
 }

@@ -1,4 +1,5 @@
 ﻿using Inplanticular.IdentityService.Core.V1.Contracts.Responses;
+using Inplanticular.IdentityService.Core.V1.Extensions;
 using Inplanticular.IdentityService.Core.V1.ValueObjects;
 
 using Microsoft.AspNetCore.Mvc;
@@ -42,12 +43,10 @@ public static class ControllerBaseExtensions {
 	/// <returns>The created status 500 error code.</returns>
 	public static IActionResult InternalServerError<TResponse>(this ControllerBase controller, Exception exception) where TResponse : BaseResponse {
 		var response = Activator.CreateInstance<TResponse>();
-		response.Errors = new[] {
-			new Info {
-				Code = exception.GetType().Name,
-				Description = exception.Message
-			}
-		};
+		response.Errors = exception.GetExceptionHierarchy().Select(ex => new Info {
+			Code = ex.GetType().Name,
+			Description = ex.Message
+		});
 		
 		return controller.StatusCode(500, response);
 	}

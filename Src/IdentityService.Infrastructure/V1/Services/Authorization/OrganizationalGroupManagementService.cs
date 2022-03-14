@@ -53,6 +53,14 @@ public class OrganizationalGroupManagementService : IOrganizationalGroupManageme
 	}
 
 	public async Task<UpdateOrganizationalGroupResponse> UpdateOrganizationalGroupAsync(UpdateOrganizationalGroupRequest request) {
+		var existingGroup = await this._organizationalGroupRepository.FindGroupByNameAsync(request.Name);
+
+		if (existingGroup is not null) {
+			return new UpdateOrganizationalGroupResponse {
+				Errors = new[] {UpdateOrganizationalGroupResponse.Error.OrganizationalGroupNameAlreadyExists}
+			};
+		}
+		
 		var result = await this._organizationalGroupRepository.UpdateGroupAsync(
 			request.Id,
 			group => group.Name = request.Name

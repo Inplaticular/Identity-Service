@@ -13,6 +13,8 @@ public class ApplicationDbContext : IdentityDbContext {
 	public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
 	protected override void OnModelCreating(ModelBuilder builder) {
+		base.OnModelCreating(builder);
+		
 		builder.Entity<OrganizationalGroupModel>(entity => {
 			entity.HasKey(g => g.Id);
 			entity.HasIndex(g => g.Name).IsUnique();
@@ -29,11 +31,15 @@ public class ApplicationDbContext : IdentityDbContext {
 		
 		builder.Entity<OrganizationalUnitUserClaimModel>(entity => {
 			entity.HasKey(uc => uc.Id);
-			entity.HasIndex(uc => new { uc.Type, uc.Value }).IsUnique();
+			entity.HasIndex(uc => new { uc.UnitId, uc.UserId, uc.Type, uc.Value }).IsUnique();
 
 			entity.HasOne(uc => uc.Unit)
 				.WithMany(u => u.UserClaims)
-				.HasForeignKey(u => u.Unit);
+				.HasForeignKey(u => u.UnitId);
+
+			entity.HasOne(uc => uc.User)
+				.WithMany()
+				.HasForeignKey(uc => uc.UserId);
 		});
 	}
 }

@@ -6,4 +6,8 @@ public class OrganizationalUnitUserClaim {
 	public string UnitId { get; set; }
 	public string Type { get; set; }
 	public string Value { get; set; }
+
+	public OrganizationalUnitUserClaim() {
+		this.Id = Guid.NewGuid().ToString();
+	}
 }

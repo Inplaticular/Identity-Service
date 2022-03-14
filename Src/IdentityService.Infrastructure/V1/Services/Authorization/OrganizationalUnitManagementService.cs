@@ -33,13 +33,14 @@ public class OrganizationalUnitManagementService : IOrganizationalUnitManagement
 
 		if (existingUnit is not null) {
 			return new AddOrganizationalUnitResponse() {
-				Errors = new[] {AddOrganizationalUnitResponse.Error.OrganizationalUnitAlreadyExists}
+				Errors = new[] {AddOrganizationalUnitResponse.Error.OrganizationalUnitNameAlreadyExists}
 			};
 		}
 
 		var newUnit = new OrganizationalUnit() {
 			GroupId = request.GroupId,
-			Name = request.Name
+			Name = request.Name,
+			Type = request.Type
 		};
 		
 		await this._organizationalUnitRepository.AddUnitAsync(newUnit);
@@ -71,6 +72,16 @@ public class OrganizationalUnitManagementService : IOrganizationalUnitManagement
 	}
 
 	public async Task<UpdateOrganizationalUnitResponse> UpdateOrganizationalUnitAsync(UpdateOrganizationalUnitRequest request) {
+		if (request.Name is not null) {
+			var existingUnit = await this._organizationalUnitRepository.FindUnitByNameAsync(request.Name);
+
+			if (existingUnit is not null) {
+				return new UpdateOrganizationalUnitResponse {
+					Errors = new[] {UpdateOrganizationalUnitResponse.Error.OrganizationalUnitNameAlreadyExists}
+				};
+			}
+		}
+		
 		var result = await this._organizationalUnitRepository.UpdateUnitAsync(
 			request.Id,
 			unit => {
@@ -98,7 +109,7 @@ public class OrganizationalUnitManagementService : IOrganizationalUnitManagement
 
 		if (unit is null) {
 			return new AddOrganizationalUnitUserClaimResponse() {
-				Errors = new[] {AddOrganizationalUnitUserClaimResponse.Error.UserDoesNotExist}
+				Errors = new[] {AddOrganizationalUnitUserClaimResponse.Error.OrganizationalUnitDoesNotExist}
 			};
 		}
 
@@ -106,11 +117,11 @@ public class OrganizationalUnitManagementService : IOrganizationalUnitManagement
 
 		if (user is null) {
 			return new AddOrganizationalUnitUserClaimResponse() {
-				Errors = new[] {AddOrganizationalUnitUserClaimResponse.Error.OrganizationalUnitDoesNotExist}
+				Errors = new[] {AddOrganizationalUnitUserClaimResponse.Error.UserDoesNotExist}
 			};
 		}
 
-		var existingUserClaim = await this._organizationalUnitRepository.FindUserClaimByValuesAsync(request.UserId, request.Type, request.Value);
+		var existingUserClaim = await this._organizationalUnitRepository.FindUserClaimByValuesAsync(request.UnitId, request.UserId, request.Type, request.Value);
 
 		if (existingUserClaim is not null) {
 			return new AddOrganizationalUnitUserClaimResponse() {

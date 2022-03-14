@@ -17,5 +17,10 @@ public class UpdateOrganizationalUnitResponse : OrganizationalUnitResponse<Updat
 			Code = nameof(OrganizationalUnitDoesNotExist),
 			Description = "The specified organizational unit does not exist"
 		};
+		
+		public static readonly Info OrganizationalUnitNameAlreadyExists = new() {
+			Code = nameof(OrganizationalUnitNameAlreadyExists),
+			Description = "The specified organizational unit name already exists"
+		};
 	}
 }

@@ -1,10 +1,12 @@
 ﻿using System.Text;
 
 using Inplanticular.IdentityService.Core.V1.Options;
+using Inplanticular.IdentityService.Core.V1.Repositories;
 using Inplanticular.IdentityService.Core.V1.Services;
 using Inplanticular.IdentityService.Core.V1.Services.Authentication;
 using Inplanticular.IdentityService.Core.V1.Services.Authorization;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
+using Inplanticular.IdentityService.Infrastructure.V1.Repositories;
 using Inplanticular.IdentityService.Infrastructure.V1.Services;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authentication;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authorization;
@@ -65,12 +67,18 @@ public static class Program {
 	private static void ConfigureScopedServices(WebApplicationBuilder builder) {
 		builder.Services.AddScoped<IJwtIssuingService, JwtIssuingService>();
 		builder.Services.AddScoped<IEmailService, EmailService>();
+		builder.Services.AddScoped<IMappingService, MappingService>();
 		
 		builder.Services.AddScoped<ISignUpService, SignUpService>();
 		builder.Services.AddScoped<ILoginService<IdentityUser>, LoginService>();
 		builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 
 		builder.Services.AddScoped<IGlobalAuthorizationService, GlobalAuthorizationService>();
+
+		builder.Services.AddScoped<IOrganizationalGroupRepository, OrganizationalGroupRepository>();
+		builder.Services.AddScoped<IOrganizationalUnitRepository, OrganizationalUnitRepository>();
+		builder.Services.AddScoped<IOrganizationalGroupManagementService, OrganizationalGroupManagementService>();
+		builder.Services.AddScoped<IOrganizationalUnitManagementService, OrganizationalUnitManagementService>();
 	}
 	
 	private static void ConfigureEntityFramework(WebApplicationBuilder builder) {
