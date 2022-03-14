@@ -74,6 +74,7 @@ public static class Program {
 		builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 
 		builder.Services.AddScoped<IGlobalAuthorizationService, GlobalAuthorizationService>();
+		builder.Services.AddScoped<IEntityAuthorizationService, EntityAuthorizationService>();
 
 		builder.Services.AddScoped<IOrganizationalGroupRepository, OrganizationalGroupRepository>();
 		builder.Services.AddScoped<IOrganizationalUnitRepository, OrganizationalUnitRepository>();
