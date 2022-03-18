@@ -5,11 +5,14 @@ using Inplanticular.IdentityService.Core.V1.Repositories;
 using Inplanticular.IdentityService.Core.V1.Services;
 using Inplanticular.IdentityService.Core.V1.Services.Authentication;
 using Inplanticular.IdentityService.Core.V1.Services.Authorization;
+using Inplanticular.IdentityService.Core.V1.Services.Information;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
 using Inplanticular.IdentityService.Infrastructure.V1.Repositories;
 using Inplanticular.IdentityService.Infrastructure.V1.Services;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authentication;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authorization;
+using Inplanticular.IdentityService.Infrastructure.V1.Services.Information;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +26,7 @@ public static class Program {
 		var builder = WebApplication.CreateBuilder(args);
 		Program.ConfigureServices(builder);
 		var app = builder.Build();
+		Program.ConfigurePipeline(app);
 
 		using (var scope = app.Services.CreateScope()) {
 			var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -30,8 +34,7 @@ public static class Program {
 			if ((await context.Database.GetPendingMigrationsAsync()).Any())
 				await context.Database.MigrateAsync();
 		}
-
-		Program.ConfigurePipeline(app);
+		
 		await app.RunAsync();
 	}
 
@@ -80,6 +83,9 @@ public static class Program {
 		builder.Services.AddScoped<IOrganizationalUnitRepository, OrganizationalUnitRepository>();
 		builder.Services.AddScoped<IOrganizationalGroupManagementService, OrganizationalGroupManagementService>();
 		builder.Services.AddScoped<IOrganizationalUnitManagementService, OrganizationalUnitManagementService>();
+
+		builder.Services.AddScoped<IAuthenticationInformationService, AuthenticationInformationService>();
+		builder.Services.AddScoped<IAuthorizationInformationService, AuthorizationInformationService>();
 	}
 	
 	private static void ConfigureEntityFramework(WebApplicationBuilder builder) {
