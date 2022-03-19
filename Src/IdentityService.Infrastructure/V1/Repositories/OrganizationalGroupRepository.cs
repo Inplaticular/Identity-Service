@@ -33,7 +33,11 @@ public class OrganizationalGroupRepository : IOrganizationalGroupRepository {
 
 	public async Task<bool> UpdateGroupAsync(OrganizationalGroup group) {
 		var groupModel = this._mappingService.MapTo<OrganizationalGroupModel>(group)!;
-		var entry = this._applicationDbContext.Entry(this._applicationDbContext.FindTrackedAsync(groupModel));
+		var trackedEntity = await this._applicationDbContext.FindTrackedAsync(groupModel);
+		if (trackedEntity is null)
+			return false;
+		
+		var entry = this._applicationDbContext.Entry(trackedEntity);
 		if (entry.State == EntityState.Detached)
 			return false;
 		

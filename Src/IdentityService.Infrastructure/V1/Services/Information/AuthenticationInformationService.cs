@@ -4,6 +4,7 @@ using Inplanticular.IdentityService.Core.V1.Dtos;
 using Inplanticular.IdentityService.Core.V1.Services;
 using Inplanticular.IdentityService.Core.V1.Services.Information;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
+using Inplanticular.IdentityService.Infrastructure.V1.Database.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,9 @@ public class AuthenticationInformationService : IAuthenticationInformationServic
 				}
 			};
 		}
+
+		var group = new OrganizationalGroupModel {Name = "Group"};
+		var entry = this._applicationDbContext.Entry(group);
 
 		var users = await this._applicationDbContext.Users
 			.Where(user => user.Email.ToLower().Contains(request.UsernameEmail.ToLower()) ||
