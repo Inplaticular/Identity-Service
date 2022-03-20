@@ -12,6 +12,7 @@ services:
       POSTGRES_DB: root
     depends_on:
       - identity_database
+      - identity_cache
 
   identity_database:
     image: postgres:14.1-alpine
@@ -20,3 +21,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: root
+      
+  identity_cache:
+    image: redis:6.2.6-alpine
+    restart: unless-stopped
+    command: redis-server --loglevel warning
