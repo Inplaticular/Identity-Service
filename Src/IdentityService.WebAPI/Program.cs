@@ -1,5 +1,9 @@
 ﻿using System.Text;
 
+using EasyCaching.Core.Configurations;
+
+using EFCoreSecondLevelCacheInterceptor;
+
 using Inplanticular.IdentityService.Core.V1.Options;
 using Inplanticular.IdentityService.Core.V1.Repositories;
 using Inplanticular.IdentityService.Core.V1.Services;
@@ -12,6 +16,7 @@ using Inplanticular.IdentityService.Infrastructure.V1.Services;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authentication;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Authorization;
 using Inplanticular.IdentityService.Infrastructure.V1.Services.Information;
+using Inplanticular.IdentityService.WebAPI.V1.Options;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -41,9 +46,10 @@ public static class Program {
 	private static void ConfigureServices(WebApplicationBuilder builder) {
 		builder.Configuration.AddEnvironmentVariables();
 
-		Program.ConfigureOptions(builder, out var jwtIssuingOptions);
+		Program.ConfigureOptions(builder, out var jwtIssuingOptions, out var redisOptions);
 		Program.ConfigureControllers(builder);
 		Program.ConfigureScopedServices(builder);
+		Program.ConfigureEfCoreRedisCache(builder, redisOptions);
 		Program.ConfigureEntityFramework(builder);
 		Program.ConfigureIdentity(builder);
 		Program.ConfigureJwtAuthentication(builder, jwtIssuingOptions);
@@ -53,14 +59,19 @@ public static class Program {
 		builder.Services.AddSwaggerGen();
 	}
 	
-	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions) {
+	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions, out RedisOptions redisOptions) {
 		// Disable default ApiControllerAttribute model state validation to allow controllers to pass model state errors to custom responses.
 		builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 		
 		jwtIssuingOptions = new JwtIssuingOptions();
 		builder.Configuration.Bind(JwtIssuingOptions.AppSettingsKey, jwtIssuingOptions);
 		builder.Services.Configure<JwtIssuingOptions>(builder.Configuration.GetSection(JwtIssuingOptions.AppSettingsKey));
+		
 		builder.Services.Configure<EmailHostOptions>(builder.Configuration.GetSection(EmailHostOptions.AppSettingsKey));
+		
+		redisOptions = new RedisOptions();
+		builder.Configuration.Bind(RedisOptions.AppSettingsKey, redisOptions);
+		builder.Services.Configure<RedisOptions>(builder.Configuration.GetSection(RedisOptions.AppSettingsKey));
 	}
 
 	private static void ConfigureControllers(WebApplicationBuilder builder) {
@@ -88,17 +99,36 @@ public static class Program {
 		builder.Services.AddScoped<IAuthorizationInformationService, AuthorizationInformationService>();
 	}
 	
+	private static void ConfigureEfCoreRedisCache(WebApplicationBuilder builder, RedisOptions redisOptions) {
+		builder.Services.AddEasyCaching(options => {
+			options.UseRedis(opt => {
+				opt.DBConfig.AllowAdmin = redisOptions.AllowAdmin;
+				opt.DBConfig.SyncTimeout = redisOptions.SyncTimeout;
+				opt.DBConfig.AsyncTimeout = redisOptions.AsyncTimeout;
+				opt.DBConfig.Endpoints.Add(new ServerEndPoint(redisOptions.Host, redisOptions.Port));
+			}, redisOptions.ProviderName);
+		});
+		
+		builder.Services.AddEFSecondLevelCache(options => {
+			options
+				.UseEasyCachingCoreProvider(redisOptions.ProviderName, redisOptions.IsHybridCache)
+				.DisableLogging(redisOptions.DisableLogging)
+				.UseCacheKeyPrefix("EF_");
+		});
+	}
+
 	private static void ConfigureEntityFramework(WebApplicationBuilder builder) {
 		builder.Services.AddDbContext<ApplicationDbContext>(
-			options => options.UseNpgsql(
-				builder.Configuration.GetConnectionString("postgres")
-					.Replace("$POSTGRES_USER", Environment.GetEnvironmentVariable("POSTGRES_USER"))
-					.Replace("$POSTGRES_PASSWORD", Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"))
-					.Replace("$POSTGRES_DB", Environment.GetEnvironmentVariable("POSTGRES_DB")),
-				optionsBuilder => {
-					optionsBuilder.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
-				}
-			)
+			(serviceProvider, optionsBuilder) => optionsBuilder
+				.UseNpgsql(
+					builder.Configuration.GetConnectionString("postgres")
+						.Replace("$POSTGRES_USER", Environment.GetEnvironmentVariable("POSTGRES_USER"))
+						.Replace("$POSTGRES_PASSWORD", Environment.GetEnvironmentVariable("POSTGRES_PASSWORD"))
+						.Replace("$POSTGRES_DB", Environment.GetEnvironmentVariable("POSTGRES_DB")),
+					optionsBuilder => {
+						optionsBuilder.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+					})
+				.AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>())
 		);
 	}
 

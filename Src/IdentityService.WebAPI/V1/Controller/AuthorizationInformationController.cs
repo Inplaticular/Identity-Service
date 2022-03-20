@@ -21,7 +21,7 @@ public class AuthorizationInformationController : ControllerBase {
 	
 	[HttpGet]
 	[Route("group")]
-	public async Task<IActionResult> GetOrganizationalGroupByNameAsync([FromBody] GetOrganizationalGroupByNameRequest request) {
+	public async Task<IActionResult> GetOrganizationalGroupByNameAsync([FromQuery] GetOrganizationalGroupByNameRequest request) {
 		if (!this.HasValidModelState(out GetOrganizationalGroupByNameResponse? response))
 			return this.BadRequest(response);
 		
@@ -36,7 +36,7 @@ public class AuthorizationInformationController : ControllerBase {
 	
 	[HttpGet]
 	[Route("userclaims")]
-	public async Task<IActionResult> GetUserClaimsForOrganizationalUnitAsync([FromBody] GetUserClaimsForOrganizationalUnitRequest request) {
+	public async Task<IActionResult> GetUserClaimsForOrganizationalUnitAsync([FromQuery] GetUserClaimsForOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out GetUserClaimsForOrganizationalUnitResponse? response))
 			return this.BadRequest(response);
 		
