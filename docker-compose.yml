@@ -1,0 +1,22 @@
+﻿version: '3.8'
+services:
+  identity_api:
+    build: .
+    command: 'dotnet Inplanticular.IdentityService.WebAPI.dll --urls=http://*:80 --environment="Development"'
+    restart: unless-stopped
+    ports:
+      - 7001:80
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: root
+    depends_on:
+      - identity_database
+
+  identity_database:
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: root
