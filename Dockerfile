@@ -20,6 +20,6 @@ RUN dotnet publish "IdentityService.WebAPI.csproj" -c Release -o /app/publish
 
 # 3. Take published version
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS final
-EXPOSE 80
+EXPOSE 7001
 WORKDIR /app
 COPY --from=publish /app/publish .
