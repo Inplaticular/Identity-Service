@@ -2,14 +2,16 @@
 services:
   identity_api:
     build: .
-    command: 'dotnet Inplanticular.IdentityService.WebAPI.dll --urls=http://*:80 --environment="Development"'
+    command: 'dotnet Inplanticular.IdentityService.WebAPI.dll --urls=http://*:7001 --environment="Development"'
     restart: unless-stopped
     ports:
-      - 7001:80
+      - 7001:7001
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: root
+    networks:
+      - inplanticular_net
     depends_on:
       - identity_database
       - identity_cache
@@ -21,8 +23,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: root
+    networks:
+      - inplanticular_net
       
   identity_cache:
     image: redis:6.2.6-alpine
     restart: unless-stopped
     command: redis-server --loglevel warning
+    networks:
+      - inplanticular_net
+    
+networks:
+  inplanticular_net:
+    name: inplanticular_net
+    external: true
