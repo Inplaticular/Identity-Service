@@ -18,7 +18,7 @@ public class OrganizationalUnitController : ControllerBase {
 		this._logger = logger;
 	}
 
-	[HttpPut]
+	[HttpPost]
 	public async Task<IActionResult> AddOrganizationalUnitAsync([FromBody] AddOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalUnitResponse? response))
 			return this.BadRequest(response);
@@ -46,7 +46,7 @@ public class OrganizationalUnitController : ControllerBase {
 		}
 	}
 	
-	[HttpPost]
+	[HttpPut]
 	[Route("update")]
 	public async Task<IActionResult> UpdateOrganizationalUnitAsync([FromBody] UpdateOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out UpdateOrganizationalUnitResponse? response))
@@ -61,7 +61,7 @@ public class OrganizationalUnitController : ControllerBase {
 		}
 	}
 	
-	[HttpPut]
+	[HttpPost]
 	[Route("userclaim")]
 	public async Task<IActionResult> AddOrganizationalUnitUserClaimAsync([FromBody] AddOrganizationalUnitUserClaimRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalUnitUserClaimResponse? response))

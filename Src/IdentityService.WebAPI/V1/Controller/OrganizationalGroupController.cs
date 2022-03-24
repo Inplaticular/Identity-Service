@@ -18,7 +18,7 @@ public class OrganizationalGroupController : ControllerBase {
 		this._logger = logger;
 	}
 
-	[HttpPut]
+	[HttpPost]
 	public async Task<IActionResult> AddOrganizationalGroupAsync([FromBody] AddOrganizationalGroupRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalGroupResponse? response))
 			return this.BadRequest(response);
@@ -46,7 +46,7 @@ public class OrganizationalGroupController : ControllerBase {
 		}
 	}
 
-	[HttpPost]
+	[HttpPut]
 	[Route("update")]
 	public async Task<IActionResult> UpdateOrganizationalGroupAsync([FromBody] UpdateOrganizationalGroupRequest request) {
 		if (!this.HasValidModelState(out UpdateOrganizationalGroupResponse? response))

@@ -48,6 +48,7 @@ public class AuthorizationInformationService : IAuthorizationInformationService 
 		var userClaims = await this._organizationalUnitRepository.GetUserClaimsForUnitAsync(unit);
 		
 		return new GetUserClaimsForOrganizationalUnitResponse {
+			Succeeded = true,
 			Messages = new[] {GetUserClaimsForOrganizationalUnitResponse.Message.UserClaimsReturnedSuccessfully},
 			Content = new GetUserClaimsForOrganizationalUnitResponse.Body {
 				UserClaims = userClaims
