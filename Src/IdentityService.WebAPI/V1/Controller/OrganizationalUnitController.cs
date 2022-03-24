@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Inplanticular.IdentityService.WebAPI.V1.Controller; 
 
 [ApiController]
-[Route("v1/authorize/unit")]
+[Route("v1/authorization/unit")]
 public class OrganizationalUnitController : ControllerBase {
 	private readonly IOrganizationalUnitManagementService _organizationalUnitManagementService;
 	private readonly ILogger<OrganizationalUnitController> _logger;

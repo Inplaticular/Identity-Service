@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Inplanticular.IdentityService.WebAPI.V1.Controller; 
 
 [ApiController]
-[Route("v1/authorize/group")]
+[Route("v1/authorization/group")]
 public class OrganizationalGroupController : ControllerBase {
 	private readonly IOrganizationalGroupManagementService _organizationalGroupManagementService;
 	private readonly ILogger<OrganizationalGroupController> _logger;
