@@ -25,12 +25,12 @@ public class AuthorizationController : ControllerBase {
 
 	[HttpPost]
 	[Route("user")]
-	public IActionResult AuthorizeUser([FromBody] AuthorizeRequest request) {
+	public async Task<IActionResult> AuthorizeUser([FromBody] AuthorizeRequest request) {
 		if (!this.HasValidModelState(out AuthorizeResponse? response))
 			return this.BadRequest(response);
 		
 		try {
-			return this.Ok(this._globalAuthorizationService.AuthorizeUser(request));
+			return this.Ok(await this._globalAuthorizationService.AuthorizeUserAsync(request));
 		}
 		catch (Exception e) {
 			this._logger.LogError(e, $"{nameof(this.AuthorizeUser)} threw an exception");

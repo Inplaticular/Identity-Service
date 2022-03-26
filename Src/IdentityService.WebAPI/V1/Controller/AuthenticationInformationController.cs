@@ -17,6 +17,21 @@ public class AuthenticationInformationController : ControllerBase {
 		this._authenticationInformationService = authenticationInformationService;
 		this._logger = logger;
 	}
+	
+	[HttpGet]
+	[Route("user")]
+	public async Task<IActionResult> GetUserByIdAsync([FromQuery] GetUserByIdRequest request) {
+		if (!this.HasValidModelState(out GetUserByIdResponse? response))
+			return this.BadRequest(response);
+		
+		try {
+			return this.Ok(await this._authenticationInformationService.GetUserByIdAsync(request));
+		}
+		catch (Exception e) {
+			this._logger.LogError(e, $"{nameof(this.GetUserByIdAsync)} threw an exception");
+			return this.InternalServerError<GetUserByIdResponse>(e);
+		}
+	}
 
 	[HttpGet]
 	[Route("users")]

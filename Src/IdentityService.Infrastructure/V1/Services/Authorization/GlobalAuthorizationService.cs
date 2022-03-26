@@ -1,4 +1,6 @@
-﻿using Inplanticular.IdentityService.Core.V1.Contracts.Requests.Authorization;
+﻿using System.IdentityModel.Tokens.Jwt;
+
+using Inplanticular.IdentityService.Core.V1.Contracts.Requests.Authorization;
 using Inplanticular.IdentityService.Core.V1.Contracts.Responses.Authorization;
 using Inplanticular.IdentityService.Core.V1.Options;
 using Inplanticular.IdentityService.Core.V1.Services;
@@ -28,12 +30,24 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 		this._jwtIssuingOptions = jwtIssuingOptions.Value;
 	}
 
-	public AuthorizeResponse AuthorizeUser(AuthorizeRequest request) {
+	public async Task<AuthorizeResponse> AuthorizeUserAsync(AuthorizeRequest request) {
 		if (string.IsNullOrWhiteSpace(request.Token))
 			return new AuthorizeResponse() {Errors = new[] {AuthorizeResponse.Error.InvalidToken}};
 
 		try {
 			this._jwtIssuingService.ValidateToken(request.Token);
+			
+			var claims = this._jwtIssuingService.GetClaimsFromToken(request.Token);
+			var sub = claims?.FirstOrDefault(claim => claim.Type.Equals(JwtRegisteredClaimNames.Sub))?.Value;
+			
+			if (sub is null)
+				return new AuthorizeResponse() {Errors = new[] {AuthorizeResponse.Error.InvalidToken}};
+
+			var user = await this._userManager.FindByIdAsync(sub);
+			
+			if (user is null)
+				return new AuthorizeResponse() {Errors = new[] {AuthorizeResponse.Error.InvalidToken}};
+			
 			return new AuthorizeResponse() {
 				Succeeded = true,
 				Messages = new[] {AuthorizeResponse.Message.Authorized},
@@ -42,7 +56,7 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 				}
 			};
 		} catch (Exception e) {
-			this._logger.LogError(e, $"{nameof(this.AuthorizeUser)} threw an exception");
+			this._logger.LogError(e, $"{nameof(this.AuthorizeUserAsync)} threw an exception");
 			
 			return new AuthorizeResponse() {
 				Succeeded = true,
@@ -57,7 +71,7 @@ public class GlobalAuthorizationService : IGlobalAuthorizationService {
 	}
 
 	public async Task<AuthorizeGlobalRoleResponse> AuthorizeUserGlobalRoleAsync(AuthorizeGlobalRoleRequest request) {
-		var authTokenResponse = this.AuthorizeUser(request);
+		var authTokenResponse = await this.AuthorizeUserAsync(request);
 
 		if (authTokenResponse.Content is null || !authTokenResponse.Content.Authorized) {
 			return new AuthorizeGlobalRoleResponse() {

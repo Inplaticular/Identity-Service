@@ -3,10 +3,10 @@ using Inplanticular.IdentityService.Core.V1.Contracts.Responses.Information;
 using Inplanticular.IdentityService.Core.V1.Dtos;
 using Inplanticular.IdentityService.Core.V1.Services;
 using Inplanticular.IdentityService.Core.V1.Services.Information;
+using Inplanticular.IdentityService.Core.V1.ValueObjects;
 using Inplanticular.IdentityService.Infrastructure.V1.Database;
 using Inplanticular.IdentityService.Infrastructure.V1.Database.Models;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inplanticular.IdentityService.Infrastructure.V1.Services.Information; 
@@ -19,7 +19,22 @@ public class AuthenticationInformationService : IAuthenticationInformationServic
 		this._applicationDbContext = applicationDbContext;
 		this._mappingService = mappingService;
 	}
-	
+
+	public async Task<GetUserByIdResponse> GetUserByIdAsync(GetUserByIdRequest request) {
+		var user = await this._applicationDbContext.Users.FindAsync(request.UserId);
+
+		return new GetUserByIdResponse {
+			Succeeded = user is not null,
+			Messages = user is not null
+				? new[] {GetUserByIdResponse.Message.UserReturnedSuccessfully}
+				: Enumerable.Empty<Info>(),
+			Errors = user is not null ? Enumerable.Empty<Info>() : new[] {GetUserByIdResponse.Error.UserNotFound},
+			Content = user is not null
+				? new GetUserByIdResponse.Body {User = this._mappingService.MapTo<UserDto>(user)!}
+				: null
+		};
+	}
+
 	public async Task<GetUsersByNameOrEmailResponse> GetUsersByNameOrEmailAsync(GetUsersByNameOrEmailRequest request) {
 		if (string.IsNullOrWhiteSpace(request.UsernameEmail)) {
 			return new GetUsersByNameOrEmailResponse {
