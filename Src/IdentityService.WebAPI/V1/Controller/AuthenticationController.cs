@@ -23,7 +23,7 @@ public class AuthenticationController : ControllerBase {
 		this._passwordResetService = passwordResetService;
 	}
 /// <summary>
-///	sings up a user
+///	Signs up a user.
 /// </summary>
 [HttpPost]
 	[Route("signup")]
@@ -42,7 +42,7 @@ public class AuthenticationController : ControllerBase {
 		}
 	}
 	/// <summary>
-	/// logs a user in.
+	/// Logs a user in.
 	/// </summary>
 	[HttpPost]
 	[Route("login")]
@@ -60,7 +60,7 @@ public class AuthenticationController : ControllerBase {
 		}
 	}
 	/// <summary>
-	/// requests a reset of the password.
+	/// Requests a reset token via email.
 	/// </summary>
 	[HttpPost]
 	[Route("requestresetpwd")]

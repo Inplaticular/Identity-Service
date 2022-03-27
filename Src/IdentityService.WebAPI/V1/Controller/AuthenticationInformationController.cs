@@ -18,7 +18,7 @@ public class AuthenticationInformationController : ControllerBase {
 		this._logger = logger;
 	}
 	/// <summary>
-	/// Get a user matching to the passed uderId
+	/// Get a user matching to the passed userId
 	/// </summary>
 	[HttpGet]
 	[Route("user")]

@@ -24,7 +24,7 @@ public class AuthorizationController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Authorizes a user which requested to do something requiring authorization
+	/// Validates the provided token and the existence of the user ID within the token Sub.
 	/// </summary>
 	[HttpPost]
 	[Route("user")]
