@@ -18,7 +18,11 @@ public class OrganizationalUnitController : ControllerBase {
 		this._logger = logger;
 	}
 
+	/// <summary>
+	/// Creates an organizational unit.
+	/// </summary>
 	[HttpPost]
+	[ProducesResponseType(typeof(AddOrganizationalUnitResponse), 200)]
 	public async Task<IActionResult> AddOrganizationalUnitAsync([FromBody] AddOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalUnitResponse? response))
 			return this.BadRequest(response);
@@ -31,8 +35,11 @@ public class OrganizationalUnitController : ControllerBase {
 			return this.InternalServerError<AddOrganizationalUnitResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Deletes an organizational unit.
+	/// </summary>
 	[HttpDelete]
+	[ProducesResponseType(typeof(RemoveOrganizationalUnitResponse), 200)]
 	public async Task<IActionResult> RemoveOrganizationalUnitAsync([FromBody] RemoveOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out RemoveOrganizationalUnitResponse? response))
 			return this.BadRequest(response);
@@ -45,9 +52,12 @@ public class OrganizationalUnitController : ControllerBase {
 			return this.InternalServerError<RemoveOrganizationalUnitResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Edits an organizational unit.
+	/// </summary>
 	[HttpPut]
 	[Route("update")]
+	[ProducesResponseType(typeof(UpdateOrganizationalUnitResponse), 200)]
 	public async Task<IActionResult> UpdateOrganizationalUnitAsync([FromBody] UpdateOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out UpdateOrganizationalUnitResponse? response))
 			return this.BadRequest(response);
@@ -60,9 +70,12 @@ public class OrganizationalUnitController : ControllerBase {
 			return this.InternalServerError<UpdateOrganizationalUnitResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Creates a user claim for an organizational unit.
+	/// </summary>
 	[HttpPost]
 	[Route("userclaim")]
+	[ProducesResponseType(typeof(AddOrganizationalUnitUserClaimResponse), 200)]
 	public async Task<IActionResult> AddOrganizationalUnitUserClaimAsync([FromBody] AddOrganizationalUnitUserClaimRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalUnitUserClaimResponse? response))
 			return this.BadRequest(response);
@@ -75,9 +88,12 @@ public class OrganizationalUnitController : ControllerBase {
 			return this.InternalServerError<AddOrganizationalUnitUserClaimResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Deletes a user claim belonging to a certain organizational unit
+	/// </summary>
 	[HttpDelete]
 	[Route("userclaim")]
+	[ProducesResponseType(typeof(RemoveOrganizationalUnitUserClaimResponse), 200)]
 	public async Task<IActionResult> RemoveOrganizationalUnitUserClaimAsync([FromBody] RemoveOrganizationalUnitUserClaimRequest request) {
 		if (!this.HasValidModelState(out RemoveOrganizationalUnitUserClaimResponse? response))
 			return this.BadRequest(response);

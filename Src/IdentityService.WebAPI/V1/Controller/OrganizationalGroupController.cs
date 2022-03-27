@@ -18,7 +18,11 @@ public class OrganizationalGroupController : ControllerBase {
 		this._logger = logger;
 	}
 
+	/// <summary>
+	/// Creates an organizational group.
+	/// </summary>
 	[HttpPost]
+	[ProducesResponseType(typeof(AddOrganizationalGroupResponse), 200)]
 	public async Task<IActionResult> AddOrganizationalGroupAsync([FromBody] AddOrganizationalGroupRequest request) {
 		if (!this.HasValidModelState(out AddOrganizationalGroupResponse? response))
 			return this.BadRequest(response);
@@ -32,7 +36,11 @@ public class OrganizationalGroupController : ControllerBase {
 		}
 	}
 
+	/// <summary>
+	/// Deletes an organizational group of the passed id.
+	/// </summary>
 	[HttpDelete]
+	[ProducesResponseType(typeof(RemoveOrganizationalGroupResponse), 200)]
 	public async Task<IActionResult> RemoveOrganizationalGroupAsync([FromBody] RemoveOrganizationalGroupRequest request) {
 		if (!this.HasValidModelState(out RemoveOrganizationalGroupResponse? response))
 			return this.BadRequest(response);
@@ -46,8 +54,12 @@ public class OrganizationalGroupController : ControllerBase {
 		}
 	}
 
+	/// <summary>
+	/// Edits an organizational group.
+	/// </summary>
 	[HttpPut]
 	[Route("update")]
+	[ProducesResponseType(typeof(UpdateOrganizationalGroupResponse), 200)]
 	public async Task<IActionResult> UpdateOrganizationalGroupAsync([FromBody] UpdateOrganizationalGroupRequest request) {
 		if (!this.HasValidModelState(out UpdateOrganizationalGroupResponse? response))
 			return this.BadRequest(response);
