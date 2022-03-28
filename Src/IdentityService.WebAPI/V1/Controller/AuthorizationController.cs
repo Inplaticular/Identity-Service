@@ -23,8 +23,12 @@ public class AuthorizationController : ControllerBase {
 		this._logger = logger;
 	}
 
+	/// <summary>
+	/// Validates the provided token and the existence of the user ID within the token Sub.
+	/// </summary>
 	[HttpPost]
 	[Route("user")]
+	[ProducesResponseType(typeof(AuthorizeResponse), 200)]
 	public async Task<IActionResult> AuthorizeUser([FromBody] AuthorizeRequest request) {
 		if (!this.HasValidModelState(out AuthorizeResponse? response))
 			return this.BadRequest(response);
@@ -37,9 +41,12 @@ public class AuthorizationController : ControllerBase {
 			return this.InternalServerError<AuthorizeResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Authorizes a user with a certain global role
+	/// </summary>
 	[HttpPost]
 	[Route("globalrole")]
+	[ProducesResponseType(typeof(AuthorizeGlobalRoleResponse), 200)]
 	public async Task<IActionResult> AuthorizeUserGlobalRoleAsync([FromBody] AuthorizeGlobalRoleRequest request) {
 		if (!this.HasValidModelState(out AuthorizeGlobalRoleResponse? response))
 			return this.BadRequest(response);
@@ -52,9 +59,12 @@ public class AuthorizationController : ControllerBase {
 			return this.InternalServerError<AuthorizeGlobalRoleResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Validates if a user claim is valid
+	/// </summary>
 	[HttpPost]
 	[Route("userclaim")]
+	[ProducesResponseType(typeof(ValidateOrganizationalUnitUserClaimResponse), 200)]
 	public async Task<IActionResult> ValidateOrganizationalUnitUserClaimAsync([FromBody] ValidateOrganizationalUnitUserClaimRequest request) {
 		if (!this.HasValidModelState(out ValidateOrganizationalUnitUserClaimResponse? response))
 			return this.BadRequest(response);

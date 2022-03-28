@@ -18,9 +18,12 @@ public class AuthorizationInformationController : ControllerBase {
 		this._authorizationInformationService = authorizationInformationService;
 		this._logger = logger;
 	}
-	
+	/// <summary>
+	/// Gets the organizational group by its name
+	/// </summary>
 	[HttpGet]
 	[Route("group")]
+	[ProducesResponseType(typeof(GetOrganizationalGroupByNameResponse), 200)]
 	public async Task<IActionResult> GetOrganizationalGroupByNameAsync([FromQuery] GetOrganizationalGroupByNameRequest request) {
 		if (!this.HasValidModelState(out GetOrganizationalGroupByNameResponse? response))
 			return this.BadRequest(response);
@@ -33,9 +36,12 @@ public class AuthorizationInformationController : ControllerBase {
 			return this.InternalServerError<GetOrganizationalGroupByNameResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Gets all user claims for a certain organizational unit.
+	/// </summary>
 	[HttpGet]
 	[Route("userclaims")]
+	[ProducesResponseType(typeof(GetUserClaimsForOrganizationalUnitResponse), 200)]
 	public async Task<IActionResult> GetUserClaimsForOrganizationalUnitAsync([FromQuery] GetUserClaimsForOrganizationalUnitRequest request) {
 		if (!this.HasValidModelState(out GetUserClaimsForOrganizationalUnitResponse? response))
 			return this.BadRequest(response);

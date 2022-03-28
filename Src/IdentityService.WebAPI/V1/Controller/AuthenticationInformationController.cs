@@ -17,9 +17,12 @@ public class AuthenticationInformationController : ControllerBase {
 		this._authenticationInformationService = authenticationInformationService;
 		this._logger = logger;
 	}
-	
+	/// <summary>
+	/// Get a user matching to the passed userId
+	/// </summary>
 	[HttpGet]
 	[Route("user")]
+	[ProducesResponseType(typeof(GetUserByIdResponse), 200)]
 	public async Task<IActionResult> GetUserByIdAsync([FromQuery] GetUserByIdRequest request) {
 		if (!this.HasValidModelState(out GetUserByIdResponse? response))
 			return this.BadRequest(response);
@@ -33,8 +36,12 @@ public class AuthenticationInformationController : ControllerBase {
 		}
 	}
 
+	/// <summary>
+	/// Gets a user by a passed name OR a passed email.
+	/// </summary>
 	[HttpGet]
 	[Route("users")]
+	[ProducesResponseType(typeof(GetUsersByNameOrEmailResponse), 200)]
 	public async Task<IActionResult> GetUsersByNameOrEmailAsync([FromQuery] GetUsersByNameOrEmailRequest request) {
 		if (!this.HasValidModelState(out GetUsersByNameOrEmailResponse? response))
 			return this.BadRequest(response);

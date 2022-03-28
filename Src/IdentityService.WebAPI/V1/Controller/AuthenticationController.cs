@@ -22,9 +22,13 @@ public class AuthenticationController : ControllerBase {
 		this._loginService = loginService;
 		this._passwordResetService = passwordResetService;
 	}
-
-	[HttpPost]
+/// <summary>
+///	Signs up a user.
+/// </summary>
+[HttpPost]
 	[Route("signup")]
+	[ProducesResponseType(typeof(SignUpResponse), 200)]
+	
 	public async Task<IActionResult> SignUpUserAsync([FromBody] SignUpRequest request) {
 		if (!this.HasValidModelState(out SignUpResponse? response))
 			return this.BadRequest(response);
@@ -37,9 +41,12 @@ public class AuthenticationController : ControllerBase {
 			return this.InternalServerError<SignUpResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Logs a user in.
+	/// </summary>
 	[HttpPost]
 	[Route("login")]
+	[ProducesResponseType(typeof(LoginResponse), 200)]
 	public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request) {
 		if (!this.HasValidModelState(out LoginResponse? response))
 			return this.BadRequest(response);
@@ -52,9 +59,12 @@ public class AuthenticationController : ControllerBase {
 			return this.InternalServerError<LoginResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// Requests a reset token via email.
+	/// </summary>
 	[HttpPost]
 	[Route("requestresetpwd")]
+	[ProducesResponseType(typeof(RequestChangePasswordResponse), 200)]
 	public async Task<IActionResult> RequestResetPasswordAsync([FromBody] RequestChangePasswordRequest request) {
 		if (!this.HasValidModelState(out RequestChangePasswordResponse? response))
 			return this.BadRequest(response);
@@ -67,9 +77,12 @@ public class AuthenticationController : ControllerBase {
 			return this.InternalServerError<RequestChangePasswordResponse>(e);
 		}
 	}
-	
+	/// <summary>
+	/// resets a password of a user.
+	/// </summary>
 	[HttpPost]
 	[Route("resetpwd")]
+	[ProducesResponseType(typeof(ChangePasswordResponse), 200)]
 	public async Task<IActionResult> ResetPasswordAsync([FromBody] ChangePasswordRequest request) {
 		if (!this.HasValidModelState(out ChangePasswordResponse? response))
 			return this.BadRequest(response);

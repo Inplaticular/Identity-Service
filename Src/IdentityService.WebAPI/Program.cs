@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 
 using EasyCaching.Core.Configurations;
 
@@ -23,6 +24,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Inplanticular.IdentityService.WebAPI; 
 
@@ -56,7 +58,23 @@ public static class Program {
 		
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+		builder.Services.AddSwaggerGen(c => {
+				c.SwaggerDoc("v1", new OpenApiInfo {
+					Title = "Identity-Service",
+					Version = "v1",
+					Description =
+						"Identity-Service of Inplanticular. Used to process all request concerning authentication and authorization.",
+					Contact = new OpenApiContact {
+						Name = "Florian Korch",
+						Email = "s0568195@htw-berlin.de",
+						Url = new Uri("https://github.com/Inplaticular/Identity-Service")
+					}
+				});
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				c.IncludeXmlComments(xmlPath);
+			}
+			);
 	}
 	
 	private static void ConfigureOptions(WebApplicationBuilder builder, out JwtIssuingOptions jwtIssuingOptions, out RedisOptions redisOptions) {
